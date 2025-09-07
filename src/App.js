@@ -39,8 +39,6 @@ function App() {
   const [reserve , setreserve] = useState([])
   const [allReservedSeat, setAllReservedSeat] = useState([])
   
-
-
   function handleSelectMovie(movie){
   setSelectedMovie((select)=> select?.id == movie.id  ? null : movie)
   setreserve([]);
@@ -56,24 +54,29 @@ function App() {
       prev=> {
         if(prev.includes(seatNumber)){
           return prev.filter(seat => seat !== seatNumber)
+          
         }else{
           return [...prev , seatNumber]
+          
         }
       }
     )
+    
+    console.log(reserve);
+    
+    
+    
   }
 
   function handleSaveReserve(){
     if(!SelectedMovie || reserve.length === 0) return;
-
-    
    const updateMovies = currentMovie.map((movie)=> movie.id === SelectedMovie.id ? {...movie , reservedSeats : [...movie.reservedSeats , ...reserve] } : movie)
    setCurrentMovie(updateMovies);
    setAllReservedSeat(prev => [...prev ,...reserve])
  
- 
     setreserve([])
-  alert(`chairs of ${reserve.join(', ')} is reserved for ${SelectedMovie.MovieName}`)
+  alert(`chairs of ${reserve.join(', ')} is reserved for ${SelectedMovie.MovieName}`);
+  
   }
 
 
@@ -86,7 +89,7 @@ function App() {
      reserve={reserve} 
      allReservedSeat={allReservedSeat} />
      {setSelectedMovie && (
-      <button onClick={handleSaveReserve} disabled={reserve.length === 0 }>Saving reserve chair {reserve.length}</button>
+      <button onClick={handleSaveReserve} disabled={reserve.length === 0 }>Saving reserve  {reserve.length} chair</button>
      )}
     </div>
   );
@@ -109,7 +112,7 @@ function MovieList({ ShowMovie, currentMovie , SelectedMovie}){
       onClick={()=> ShowMovie(movie)}
       key={movie.id}>
         {movie.MovieName} 
-        {movie.reservedSeats.length > 0 && <span>  All number of reserved chairs are : {movie.reservedSeats.length}</span>}
+        {movie.reservedSeats.length > 0 && <span> (All number of reserved for this movie are  : {movie.reservedSeats.length}) </span>}
       </li>
       )}
     </ul>
@@ -137,13 +140,15 @@ function SeatsOfMovies({ToggleReserve , reserve , allReservedSeat}){
     <div>
     <h3>chair selection</h3>
 
-  <div style={{display:'flex' , flexWrap:'wrap', width:'240px'}}>
+  <div className='seat-container' style={{display:'flex' , flexWrap:'wrap', width:'240px'}}>
     {Array.from({length : 30} , ( _,i)=> i+ 1).map((num)=> {
 
       const isReserved = allReservedSeat.includes(num);
       const isSelected = reserve.includes(num)
+      
+      
 
- return( <span onClick={()=> !isReserved && ToggleReserve(num)} 
+ return( <span className='seat' onClick={()=> !isReserved && ToggleReserve(num)} 
  style={{ width:'20px' , height:'20px' , border:'1px solid red' ,
    margin:'5px 5px',
    cursor: isReserved ? 'not-allowed':'pointer',
